@@ -1,22 +1,89 @@
 aid: legalos
-name: Legalos
-description: Legalos is a company surfaced as a portfolio company of y-combinator and added to the API
-  Evangelist network as a stub for enrichment. This profile is a lead awaiting the enrichment pipeline.
+name: LegalOS
+description: 'LegalOS is an AI-native U.S. immigration law practice based in San Francisco
+  and backed by Y Combinator (Winter 2026 batch). Founded by Matthew Asir (CEO), Rachel
+  Asir (COO) and Claire Jutabha (CTO), the company pairs proprietary legal software
+  with licensed immigration attorneys to prepare employment-based visa and green-card
+  petitions — H-1B, L-1A, L-1B, O-1 and TN visas, plus EB-1A, EB-1C and EB-2 NIW green
+  cards. AI agents draft petition narratives, assemble supporting evidence and anticipate
+  USCIS objections, with every filing reviewed by a licensed attorney before submission.
+  LegalOS is delivered as a service through a customer web application at app.legalos.ai;
+  as of this profile it publishes no public developer API, SDKs, developer portal or
+  machine-readable API artifacts.'
+accessModel:
+  pricing: unknown
+  onboarding: unknown
+  trial: false
+  try_now: false
+  public: false
+  label: Unknown
+  confidence: low
+  source: []
+  generated: '2026-07-22'
+  method: derived
+image: https://cdn.prod.website-files.com/667d1a68c2779a28ef89b338/697dc2de49d014db1c617fe9_OG%201.webp
 url: https://raw.githubusercontent.com/api-evangelist/legalos/refs/heads/main/apis.yml
 x-type: company
 x-source: vc-portfolio
 x-backed-by:
 - y-combinator
-x-tier: stub
-x-tier-reason: portfolio-lead
+x-tier: profiled
+x-tier-reason: no-public-api
 specificationVersion: '0.20'
 created: '2026-07-17'
-modified: '2026-07-17'
+modified: '2026-07-19'
 tags:
 - Company
+- Legal
+- Legal Technology
+- Immigration
+- Artificial Intelligence
+- Professional Services
+- Visas
+- Compliance
 apis: []
+common:
+- type: Website
+  url: https://www.legalos.ai/
+- type: Blog
+  url: https://www.legalos.ai/blog
+- type: Login
+  url: https://app.legalos.ai
+- type: Support
+  url: https://www.legalos.ai/contact-us
+- type: TermsOfService
+  url: https://www.legalos.ai/terms-of-service-legalos
+- type: PrivacyPolicy
+  url: https://www.legalos.ai/privacy
+- type: About
+  url: https://www.legalos.ai/about-us
+- type: Careers
+  url: https://www.legalos.ai/careers
+- type: Compliance
+  url: https://www.legalos.ai/
+- type: Conformance
+  url: conformance/legalos-conformance.yml
+- type: WellKnown
+  url: well-known/legalos-well-known.yml
+- type: DomainSecurity
+  url: security/legalos-domain-security.yml
+- type: LLMsTxt
+  url: llms/legalos-llms.txt
+- type: Twitter
+  url: https://x.com/legalosai
+- type: LinkedIn
+  url: https://www.linkedin.com/company/legalosai/
+- type: Facebook
+  url: https://www.facebook.com/legalosai/
+- type: Instagram
+  url: https://www.instagram.com/legalosai
 maintainers:
 - FN: Kin Lane
   email: kin@apievangelist.com
 - FN: APIs.json
   email: info@apis.io
+x-enrichment:
+  date: '2026-07-19'
+  status: backfilled
+  pass: local-v1
+  note: backfilled from .gitignore signal + verified work evidence
