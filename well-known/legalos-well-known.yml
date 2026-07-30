@@ -1,0 +1,54 @@
+generated: '2026-07-19'
+method: searched
+source: live probes of the LegalOS marketing host and customer application host
+summary: No .well-known discovery documents are published. LegalOS operates a Webflow
+  marketing site and a customer web application; it exposes no public API, so there
+  is no OAuth/OIDC discovery, api-catalog or ai-plugin surface. The application host
+  returns HTTP 200 with the SPA HTML shell for every path (verified with a control
+  request to a nonsense path), so those 200s are soft 404s and are recorded as such
+  rather than as documents.
+hosts:
+- host: https://www.legalos.ai
+  documents:
+  - path: /.well-known/security.txt
+    status: 404
+  - path: /.well-known/openid-configuration
+    status: 404
+  - path: /.well-known/oauth-authorization-server
+    status: 404
+  - path: /.well-known/api-catalog
+    status: 404
+  - path: /.well-known/ai-plugin.json
+    status: 404
+  - path: /llms.txt
+    status: 404
+- host: https://app.legalos.ai
+  note: 'Soft-404 host: every path returns HTTP 200 with content-type text/html and
+    the single-page-application shell. Control request to /.well-known/definitely-not-a-real-path-xyz123
+    also returned 200 HTML, confirming no document is actually served.'
+  documents:
+  - path: /.well-known/security.txt
+    status: 200
+    served: soft-404-html
+    document_present: false
+  - path: /.well-known/openid-configuration
+    status: 200
+    served: soft-404-html
+    document_present: false
+  - path: /.well-known/oauth-authorization-server
+    status: 200
+    served: soft-404-html
+    document_present: false
+  - path: /.well-known/api-catalog
+    status: 200
+    served: soft-404-html
+    document_present: false
+  - path: /.well-known/ai-plugin.json
+    status: 200
+    served: soft-404-html
+    document_present: false
+  - path: /llms.txt
+    status: 200
+    served: soft-404-html
+    document_present: false
+documents_found: 0

@@ -1,0 +1,49 @@
+generated: '2026-07-19'
+method: searched
+source: https://www.legalos.ai/
+summary: LegalOS publishes no public API, so the API-facing standards below are all
+  not-applicable rather than failed. The one substantive published assertion is a SOC 2
+  Type II certification claim carried as a trust badge on the marketing homepage; there
+  is no dedicated trust center, compliance page or downloadable report to corroborate
+  it.
+standards:
+- id: soc2-type-ii
+  conforms: true
+  evidence: 'Verbatim string "SOC2 Type II certified." present in the served HTML of
+    https://www.legalos.ai/ (homepage trust badge). No trust center, compliance page,
+    auditor named, or report request flow published.'
+  confidence: low
+  caveat: Vendor self-assertion on a marketing page only; not independently verifiable
+    from public surfaces.
+- id: iso-27001
+  conforms: false
+  evidence: No mention on any public LegalOS page.
+- id: hipaa
+  conforms: false
+  evidence: No mention on any public LegalOS page.
+- id: gdpr
+  conforms: false
+  evidence: Privacy policy published, but no explicit GDPR compliance program or DPA
+    surface found.
+- id: oauth2
+  conforms: false
+  evidence: not-applicable — no public API or OAuth authorization server.
+- id: oidc
+  conforms: false
+  evidence: not-applicable — /.well-known/openid-configuration returns 404 on the marketing
+    host and a soft-404 SPA shell on the application host.
+- id: rfc9457-problem-details
+  conforms: false
+  evidence: not-applicable — no public API or OpenAPI to evaluate.
+- id: rfc9116-security-txt
+  conforms: false
+  evidence: /.well-known/security.txt returns 404; no security.txt published.
+subprocessors_disclosed:
+  source: https://www.legalos.ai/privacy
+  vendors:
+  - Anthropic
+  - OpenAI, L.L.C.
+  - Google LLC
+  - Stripe
+  - PostHog
+  - Sentry

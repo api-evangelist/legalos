@@ -1,0 +1,58 @@
+# LegalOS
+
+> AI-native U.S. immigration law practice (Y Combinator W26, San Francisco). LegalOS pairs
+> proprietary legal software with licensed immigration attorneys to prepare employment-based
+> visa and green-card petitions. LegalOS is a services company, not an API provider: as of
+> 2026-07-19 it publishes no public developer API, SDK, developer portal, OpenAPI description
+> or other machine-readable API artifact. Customer work happens in a web application at
+> app.legalos.ai.
+
+## Services
+
+- [Employment-based visas](https://www.legalos.ai/): H-1B, L-1A, L-1B, O-1 and TN petitions.
+- [H-1B](https://www.legalos.ai/employment-based-visas/h1b): specialty-occupation work visa.
+- [L-1A](https://www.legalos.ai/employment-based-visas/l1a): intracompany transferee, manager or executive.
+- [L-1B](https://www.legalos.ai/employment-based-visas/l1b): intracompany transferee, specialized knowledge.
+- [O-1](https://www.legalos.ai/employment-based-visas/o1): extraordinary ability.
+- [TN](https://www.legalos.ai/employment-based-visas/tn): USMCA professional visa for Canadian and Mexican nationals.
+- [EB-1A](https://www.legalos.ai/employment-based-greencards/eb1a): extraordinary-ability green card.
+- [EB-1C](https://www.legalos.ai/employment-based-greencards/eb1c): multinational manager or executive green card.
+- [EB-2 NIW](https://www.legalos.ai/employment-based-greencards/eb2): national interest waiver green card.
+
+## Tools
+
+- [O-1A visa eligibility checker](https://www.legalos.ai/tools/o-1a-visa-eligibility): web tool, no public API.
+- [USCIS fee calculator](https://www.legalos.ai/tools/uscis-fee-calculator): web tool, no public API.
+
+## Company
+
+- [Home](https://www.legalos.ai/)
+- [About us](https://www.legalos.ai/about-us): founded by Matthew Asir (CEO), Rachel Asir (COO) and Claire Jutabha (CTO).
+- [Our attorneys](https://www.legalos.ai/our-attorney)
+- [Contact](https://www.legalos.ai/contact-us)
+- [Careers](https://www.legalos.ai/careers)
+- [Blog](https://www.legalos.ai/blog)
+- [Y Combinator profile](https://www.ycombinator.com/companies/legalos): Winter 2026 batch.
+- [Customer application](https://app.legalos.ai)
+
+## Legal and trust
+
+- [Terms of service](https://www.legalos.ai/terms-of-service-legalos)
+- [Privacy policy](https://www.legalos.ai/privacy): discloses processing vendors including Anthropic, OpenAI, Google, Stripe, PostHog and Sentry.
+- Compliance: the homepage carries a "SOC2 Type II certified." trust badge. No trust center, compliance page or audit report is published.
+
+## API Evangelist artifacts
+
+- [apis.yml](https://raw.githubusercontent.com/api-evangelist/legalos/refs/heads/main/apis.yml): APIs.json profile for LegalOS.
+- [conformance/legalos-conformance.yml](https://raw.githubusercontent.com/api-evangelist/legalos/refs/heads/main/conformance/legalos-conformance.yml): standards assertions and caveats.
+- [well-known/legalos-well-known.yml](https://raw.githubusercontent.com/api-evangelist/legalos/refs/heads/main/well-known/legalos-well-known.yml): .well-known probe results (no documents published).
+- [security/legalos-domain-security.yml](https://raw.githubusercontent.com/api-evangelist/legalos/refs/heads/main/security/legalos-domain-security.yml): TLS, HSTS, DNSSEC, CAA, SPF and DMARC probe results.
+
+## Notes for agents
+
+- There is no public LegalOS API, authentication scheme, OAuth scope surface, webhook or event
+  catalog, MCP server, SDK, CLI or sandbox. Do not attempt to construct API calls against
+  legalos.ai or app.legalos.ai.
+- app.legalos.ai is a single-page application that returns HTTP 200 with an HTML shell for every
+  path, including paths that do not exist. Treat 200 responses from that host as soft 404s.
+- Engagement with LegalOS is through the contact form or the customer application, not an API.
