@@ -10,6 +10,17 @@ description: 'LegalOS is an AI-native U.S. immigration law practice based in San
   LegalOS is delivered as a service through a customer web application at app.legalos.ai;
   as of this profile it publishes no public developer API, SDKs, developer portal or
   machine-readable API artifacts.'
+deliveryModel:
+  model: saas
+  open_source: false
+  commercial: true
+  callable_host: false
+  label: Hosted service · you call their endpoint
+  confidence: medium
+  source:
+  - pricing
+  generated: '2026-08-28'
+  method: derived
 accessModel:
   pricing: unknown
   onboarding: unknown
