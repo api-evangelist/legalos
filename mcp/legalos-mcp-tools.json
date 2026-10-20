@@ -1,0 +1,1718 @@
+{
+  "endpoint": "https://mcp.legalos.ai/mcp",
+  "captured": "2026-10-20",
+  "method": "initialize + tools/list (anonymous, no tool called; roadmap#992)",
+  "protocol_version": "2025-06-18",
+  "server_info": {
+    "name": "legalos-mcp",
+    "title": "LegalOS",
+    "version": "0.1.0"
+  },
+  "result": {
+    "tools": [
+      {
+        "name": "list_cases",
+        "title": "List Cases",
+        "description": "List the caller's accessible LegalOS cases with beneficiaryName, canonical status, and a first-party case link. Cursor-paginated. When the user names a case, person, or visa type without an ID, call this proactively and match on beneficiaryName — never ask the user for case IDs or UUIDs.",
+        "inputSchema": {
+          "$schema": "http://json-schema.org/draft-07/schema#",
+          "type": "object",
+          "properties": {
+            "cursor": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 512,
+              "pattern": "^[A-Za-z0-9_-]+$"
+            },
+            "limit": {
+              "default": 10,
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 20
+            },
+            "conversationId": {
+              "description": "Observability only: reuse one stable id for every call in the same conversation (used to group them). Never affects the result.",
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 128
+            },
+            "requestSummary": {
+              "description": "One plain-language sentence, in your own words, saying what the user is asking for on this call (no names or sensitive details). LegalOS uses it to interpret and correctly handle the request in context — always include it.",
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 500
+            }
+          },
+          "additionalProperties": false
+        },
+        "annotations": {
+          "title": "List Cases",
+          "readOnlyHint": true,
+          "destructiveHint": false,
+          "idempotentHint": true,
+          "openWorldHint": false
+        }
+      },
+      {
+        "name": "get_case_status",
+        "title": "Get Case Status",
+        "description": "Get one case's canonical LegalOS status: waiting party, progress, steps, and server-generated next actions. Never infer beyond it. When listing steps or documents, mark what is done with ✅ and what is still needed with ☑️.",
+        "inputSchema": {
+          "$schema": "http://json-schema.org/draft-07/schema#",
+          "type": "object",
+          "properties": {
+            "petitionId": {
+              "type": "string",
+              "format": "uuid",
+              "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+            },
+            "conversationId": {
+              "description": "Observability only: reuse one stable id for every call in the same conversation (used to group them). Never affects the result.",
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 128
+            },
+            "requestSummary": {
+              "description": "One plain-language sentence, in your own words, saying what the user is asking for on this call (no names or sensitive details). LegalOS uses it to interpret and correctly handle the request in context — always include it.",
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 500
+            }
+          },
+          "required": [
+            "petitionId"
+          ],
+          "additionalProperties": false
+        },
+        "annotations": {
+          "title": "Get Case Status",
+          "readOnlyHint": true,
+          "destructiveHint": false,
+          "idempotentHint": true,
+          "openWorldHint": false
+        }
+      },
+      {
+        "name": "list_missing_requirements",
+        "title": "List Missing Requirements",
+        "description": "List a case's outstanding document requirements with status and a first-party upload link. Cursor-paginated. Show items as a ☑️ checklist (✅ when collected). Match the user's document to one, then send them to its requirementUrl — it opens the exact upload row. Never ask for the file in chat.",
+        "inputSchema": {
+          "$schema": "http://json-schema.org/draft-07/schema#",
+          "type": "object",
+          "properties": {
+            "petitionId": {
+              "type": "string",
+              "format": "uuid",
+              "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+            },
+            "cursor": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 512,
+              "pattern": "^[A-Za-z0-9_-]+$"
+            },
+            "limit": {
+              "default": 10,
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 20
+            },
+            "conversationId": {
+              "description": "Observability only: reuse one stable id for every call in the same conversation (used to group them). Never affects the result.",
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 128
+            },
+            "requestSummary": {
+              "description": "One plain-language sentence, in your own words, saying what the user is asking for on this call (no names or sensitive details). LegalOS uses it to interpret and correctly handle the request in context — always include it.",
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 500
+            }
+          },
+          "required": [
+            "petitionId"
+          ],
+          "additionalProperties": false
+        },
+        "annotations": {
+          "title": "List Missing Requirements",
+          "readOnlyHint": true,
+          "destructiveHint": false,
+          "idempotentHint": true,
+          "openWorldHint": false
+        }
+      },
+      {
+        "name": "get_faq",
+        "title": "Get FAQ",
+        "description": "Vetted LegalOS help content for common client questions. Ground answers ONLY on this content and the user's case data — never give legal advice beyond them. If they do not answer the question, direct the user to the LegalOS support channel (supportChannelUrl).",
+        "inputSchema": {
+          "$schema": "http://json-schema.org/draft-07/schema#",
+          "type": "object",
+          "properties": {
+            "cursor": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 512,
+              "pattern": "^[A-Za-z0-9_-]+$"
+            },
+            "conversationId": {
+              "description": "Observability only: reuse one stable id for every call in the same conversation (used to group them). Never affects the result.",
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 128
+            },
+            "requestSummary": {
+              "description": "One plain-language sentence, in your own words, saying what the user is asking for on this call (no names or sensitive details). LegalOS uses it to interpret and correctly handle the request in context — always include it.",
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 500
+            }
+          },
+          "additionalProperties": false
+        },
+        "annotations": {
+          "title": "Get FAQ",
+          "readOnlyHint": true,
+          "destructiveHint": false,
+          "idempotentHint": true,
+          "openWorldHint": false
+        }
+      },
+      {
+        "name": "list_document_suggestions",
+        "title": "List Document Suggestions",
+        "description": "Optional, case-strengthening document suggestions for one case: attorney-recommended evidence plus optional tracker items. Never blockers — mention positively after the required upload path is settled, e.g. 'this would also strengthen your case'. May be empty; never invent suggestions beyond it.",
+        "inputSchema": {
+          "$schema": "http://json-schema.org/draft-07/schema#",
+          "type": "object",
+          "properties": {
+            "petitionId": {
+              "type": "string",
+              "format": "uuid",
+              "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+            },
+            "conversationId": {
+              "description": "Observability only: reuse one stable id for every call in the same conversation (used to group them). Never affects the result.",
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 128
+            },
+            "requestSummary": {
+              "description": "One plain-language sentence, in your own words, saying what the user is asking for on this call (no names or sensitive details). LegalOS uses it to interpret and correctly handle the request in context — always include it.",
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 500
+            }
+          },
+          "required": [
+            "petitionId"
+          ],
+          "additionalProperties": false
+        },
+        "annotations": {
+          "title": "List Document Suggestions",
+          "readOnlyHint": true,
+          "destructiveHint": false,
+          "idempotentHint": true,
+          "openWorldHint": false
+        }
+      },
+      {
+        "name": "get_beneficiary_intake",
+        "title": "Get Beneficiary Intake",
+        "description": "Overview of one case's beneficiary intake: per-step completion counts, list totals, the current intakeRevision, and first-party form links. Show the seven steps as a ☑️ checklist (✅ when complete). Read this before any step; submitting stays on the first-party form page.",
+        "inputSchema": {
+          "$schema": "http://json-schema.org/draft-07/schema#",
+          "type": "object",
+          "properties": {
+            "petitionId": {
+              "type": "string",
+              "format": "uuid",
+              "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+            },
+            "conversationId": {
+              "description": "Observability only: reuse one stable id for every call in the same conversation (used to group them). Never affects the result.",
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 128
+            },
+            "requestSummary": {
+              "description": "One plain-language sentence, in your own words, saying what the user is asking for on this call (no names or sensitive details). LegalOS uses it to interpret and correctly handle the request in context — always include it.",
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 500
+            }
+          },
+          "required": [
+            "petitionId"
+          ],
+          "additionalProperties": false
+        },
+        "annotations": {
+          "title": "Get Beneficiary Intake",
+          "readOnlyHint": true,
+          "destructiveHint": false,
+          "idempotentHint": true,
+          "openWorldHint": false
+        }
+      },
+      {
+        "name": "get_beneficiary_intake_step",
+        "title": "Get Beneficiary Intake Step",
+        "description": "Read one beneficiary intake step: scalar steps return each field's current value and policy; list steps a bounded entry window with the total. All fields, including identifiers (SSN, passport, I-94), return their value and are editable. A truncated list's remainder is on the form page.",
+        "inputSchema": {
+          "$schema": "http://json-schema.org/draft-07/schema#",
+          "type": "object",
+          "properties": {
+            "petitionId": {
+              "type": "string",
+              "format": "uuid",
+              "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+            },
+            "step": {
+              "type": "string",
+              "enum": [
+                "personal_details",
+                "us_status",
+                "travel_visa_history",
+                "employment_history",
+                "education_history",
+                "petition_info",
+                "dependents"
+              ]
+            },
+            "conversationId": {
+              "description": "Observability only: reuse one stable id for every call in the same conversation (used to group them). Never affects the result.",
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 128
+            },
+            "requestSummary": {
+              "description": "One plain-language sentence, in your own words, saying what the user is asking for on this call (no names or sensitive details). LegalOS uses it to interpret and correctly handle the request in context — always include it.",
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 500
+            }
+          },
+          "required": [
+            "petitionId",
+            "step"
+          ],
+          "additionalProperties": false
+        },
+        "annotations": {
+          "title": "Get Beneficiary Intake Step",
+          "readOnlyHint": true,
+          "destructiveHint": false,
+          "idempotentHint": true,
+          "openWorldHint": false
+        }
+      },
+      {
+        "name": "set_beneficiary_intake_answers",
+        "title": "Set Beneficiary Intake Answers",
+        "description": "Set beneficiary intake answers the user stated — never inferred. Confirm the target case first: verify the beneficiary name; if several cases match, ask — never guess. Echo previousValue + expectedIntakeRevision from a fresh read; re-read on revision_mismatch. Sensitive IDs stay on the form page.",
+        "inputSchema": {
+          "$schema": "http://json-schema.org/draft-07/schema#",
+          "type": "object",
+          "properties": {
+            "petitionId": {
+              "type": "string",
+              "format": "uuid",
+              "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+            },
+            "contractVersion": {
+              "type": "string",
+              "const": "beneficiary.v1"
+            },
+            "expectedIntakeRevision": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 64,
+              "pattern": "^[A-Za-z0-9._-]+$"
+            },
+            "answers": {
+              "minItems": 1,
+              "maxItems": 10,
+              "type": "array",
+              "items": {
+                "anyOf": [
+                  {
+                    "type": "object",
+                    "properties": {
+                      "field": {
+                        "type": "string",
+                        "enum": [
+                          "first_name",
+                          "middle_name",
+                          "last_name",
+                          "email",
+                          "phone_primary",
+                          "phone_mobile",
+                          "phone_work",
+                          "country_of_citizenship",
+                          "nationality",
+                          "place_of_birth_city",
+                          "place_of_birth_state_province",
+                          "place_of_birth_country",
+                          "spouse_full_name",
+                          "us_ssn",
+                          "passport_number",
+                          "national_id_number",
+                          "current_us_status",
+                          "i94_entry_port",
+                          "i94_status_at_entry",
+                          "i94_number",
+                          "sevis_number",
+                          "ead_number",
+                          "alien_registration_number",
+                          "uscis_account_number",
+                          "extraordinary_ability_field"
+                        ]
+                      },
+                      "valueType": {
+                        "type": "string",
+                        "const": "text"
+                      },
+                      "value": {
+                        "type": "string",
+                        "minLength": 1,
+                        "maxLength": 200,
+                        "pattern": "^[^\\u0000-\\u001F\\u007F]*$"
+                      },
+                      "previousValue": {
+                        "anyOf": [
+                          {
+                            "type": "string",
+                            "minLength": 1,
+                            "maxLength": 200,
+                            "pattern": "^[^\\u0000-\\u001F\\u007F]*$"
+                          },
+                          {
+                            "type": "null"
+                          }
+                        ]
+                      }
+                    },
+                    "required": [
+                      "field",
+                      "valueType",
+                      "value",
+                      "previousValue"
+                    ],
+                    "additionalProperties": false
+                  },
+                  {
+                    "type": "object",
+                    "properties": {
+                      "field": {
+                        "type": "string",
+                        "enum": [
+                          "removal_proceedings_details",
+                          "immigrant_petition_details"
+                        ]
+                      },
+                      "valueType": {
+                        "type": "string",
+                        "const": "long_text"
+                      },
+                      "value": {
+                        "type": "string",
+                        "minLength": 1,
+                        "maxLength": 1000,
+                        "pattern": "^[^\\u0000-\\u001F\\u007F]*$"
+                      },
+                      "previousValue": {
+                        "anyOf": [
+                          {
+                            "type": "string",
+                            "minLength": 1,
+                            "maxLength": 1000,
+                            "pattern": "^[^\\u0000-\\u001F\\u007F]*$"
+                          },
+                          {
+                            "type": "null"
+                          }
+                        ]
+                      }
+                    },
+                    "required": [
+                      "field",
+                      "valueType",
+                      "value",
+                      "previousValue"
+                    ],
+                    "additionalProperties": false
+                  },
+                  {
+                    "type": "object",
+                    "properties": {
+                      "field": {
+                        "type": "string",
+                        "enum": [
+                          "currently_in_us",
+                          "status_expires_ds",
+                          "filing_dependent_apps",
+                          "beneficiary_in_removal",
+                          "previously_filed_immigrant_petition",
+                          "previously_given_classification",
+                          "previously_denied_classification",
+                          "is_j1_j2_exchange_visitor",
+                          "has_dependents"
+                        ]
+                      },
+                      "valueType": {
+                        "type": "string",
+                        "const": "boolean"
+                      },
+                      "value": {
+                        "type": "boolean"
+                      },
+                      "previousValue": {
+                        "type": [
+                          "boolean",
+                          "null"
+                        ]
+                      }
+                    },
+                    "required": [
+                      "field",
+                      "valueType",
+                      "value",
+                      "previousValue"
+                    ],
+                    "additionalProperties": false
+                  },
+                  {
+                    "type": "object",
+                    "properties": {
+                      "field": {
+                        "type": "string",
+                        "enum": [
+                          "dependent_apps_count",
+                          "immigrant_petition_count"
+                        ]
+                      },
+                      "valueType": {
+                        "type": "string",
+                        "const": "integer"
+                      },
+                      "value": {
+                        "type": "integer",
+                        "minimum": 0,
+                        "maximum": 999
+                      },
+                      "previousValue": {
+                        "anyOf": [
+                          {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 999
+                          },
+                          {
+                            "type": "null"
+                          }
+                        ]
+                      }
+                    },
+                    "required": [
+                      "field",
+                      "valueType",
+                      "value",
+                      "previousValue"
+                    ],
+                    "additionalProperties": false
+                  },
+                  {
+                    "type": "object",
+                    "properties": {
+                      "field": {
+                        "type": "string",
+                        "enum": [
+                          "date_of_birth",
+                          "spouse_date_of_birth",
+                          "last_entry_date",
+                          "i94_arrival_date",
+                          "i94_admit_until_date",
+                          "j_visa_start_date",
+                          "j_visa_end_date"
+                        ]
+                      },
+                      "valueType": {
+                        "type": "string",
+                        "const": "date"
+                      },
+                      "value": {
+                        "type": "string",
+                        "format": "date",
+                        "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))$"
+                      },
+                      "previousValue": {
+                        "anyOf": [
+                          {
+                            "type": "string",
+                            "format": "date",
+                            "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))$"
+                          },
+                          {
+                            "type": "null"
+                          }
+                        ]
+                      }
+                    },
+                    "required": [
+                      "field",
+                      "valueType",
+                      "value",
+                      "previousValue"
+                    ],
+                    "additionalProperties": false
+                  },
+                  {
+                    "type": "object",
+                    "properties": {
+                      "field": {
+                        "type": "string",
+                        "const": "gender"
+                      },
+                      "valueType": {
+                        "type": "string",
+                        "const": "enum"
+                      },
+                      "value": {
+                        "type": "string",
+                        "enum": [
+                          "male",
+                          "female"
+                        ]
+                      },
+                      "previousValue": {
+                        "anyOf": [
+                          {
+                            "type": "string",
+                            "enum": [
+                              "male",
+                              "female"
+                            ]
+                          },
+                          {
+                            "type": "null"
+                          }
+                        ]
+                      }
+                    },
+                    "required": [
+                      "field",
+                      "valueType",
+                      "value",
+                      "previousValue"
+                    ],
+                    "additionalProperties": false
+                  },
+                  {
+                    "type": "object",
+                    "properties": {
+                      "field": {
+                        "type": "string",
+                        "const": "marital_status"
+                      },
+                      "valueType": {
+                        "type": "string",
+                        "const": "enum"
+                      },
+                      "value": {
+                        "type": "string",
+                        "enum": [
+                          "single",
+                          "married",
+                          "divorced",
+                          "separated",
+                          "widowed"
+                        ]
+                      },
+                      "previousValue": {
+                        "anyOf": [
+                          {
+                            "type": "string",
+                            "enum": [
+                              "single",
+                              "married",
+                              "divorced",
+                              "separated",
+                              "widowed",
+                              "annulled"
+                            ]
+                          },
+                          {
+                            "type": "null"
+                          }
+                        ]
+                      }
+                    },
+                    "required": [
+                      "field",
+                      "valueType",
+                      "value",
+                      "previousValue"
+                    ],
+                    "additionalProperties": false
+                  },
+                  {
+                    "type": "object",
+                    "properties": {
+                      "field": {
+                        "type": "string",
+                        "const": "action_type"
+                      },
+                      "valueType": {
+                        "type": "string",
+                        "const": "enum"
+                      },
+                      "value": {
+                        "type": "string",
+                        "enum": [
+                          "new",
+                          "extension",
+                          "amendment",
+                          "change_of_status",
+                          "consular_processing",
+                          "adjustment_of_status"
+                        ]
+                      },
+                      "previousValue": {
+                        "anyOf": [
+                          {
+                            "type": "string",
+                            "enum": [
+                              "new",
+                              "extension",
+                              "amendment",
+                              "change_of_status",
+                              "consular_processing",
+                              "adjustment_of_status"
+                            ]
+                          },
+                          {
+                            "type": "null"
+                          }
+                        ]
+                      }
+                    },
+                    "required": [
+                      "field",
+                      "valueType",
+                      "value",
+                      "previousValue"
+                    ],
+                    "additionalProperties": false
+                  }
+                ]
+              }
+            },
+            "idempotencyKey": {
+              "type": "string",
+              "minLength": 16,
+              "maxLength": 128,
+              "pattern": "^[A-Za-z0-9._-]+$"
+            },
+            "conversationId": {
+              "description": "Observability only: reuse one stable id for every call in the same conversation (used to group them). Never affects the result.",
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 128
+            },
+            "requestSummary": {
+              "description": "One plain-language sentence, in your own words, saying what the user is asking for on this call (no names or sensitive details). LegalOS uses it to interpret and correctly handle the request in context — always include it.",
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 500
+            }
+          },
+          "required": [
+            "petitionId",
+            "contractVersion",
+            "expectedIntakeRevision",
+            "answers",
+            "idempotencyKey"
+          ],
+          "additionalProperties": false
+        },
+        "annotations": {
+          "title": "Set Beneficiary Intake Answers",
+          "readOnlyHint": false,
+          "destructiveHint": true,
+          "idempotentHint": true,
+          "openWorldHint": false
+        }
+      },
+      {
+        "name": "add_beneficiary_intake_entry",
+        "title": "Add Beneficiary Intake Entry",
+        "description": "Append ONE user-stated entry to a beneficiary intake list (employment, education, travel/visa, dependents). Confirm the target case first: verify the beneficiary name — never guess. Never edits existing entries (form page only). Needs a fresh expectedIntakeRevision; travel/visa returns entryId null.",
+        "inputSchema": {
+          "$schema": "http://json-schema.org/draft-07/schema#",
+          "type": "object",
+          "properties": {
+            "petitionId": {
+              "type": "string",
+              "format": "uuid",
+              "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+            },
+            "contractVersion": {
+              "type": "string",
+              "const": "beneficiary.v1"
+            },
+            "expectedIntakeRevision": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 64,
+              "pattern": "^[A-Za-z0-9._-]+$"
+            },
+            "entry": {
+              "anyOf": [
+                {
+                  "type": "object",
+                  "properties": {
+                    "list": {
+                      "type": "string",
+                      "const": "travel_visa_history"
+                    },
+                    "kind": {
+                      "type": "string",
+                      "const": "travel"
+                    },
+                    "entry_date": {
+                      "type": "string",
+                      "format": "date",
+                      "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))$"
+                    },
+                    "exit_date": {
+                      "type": "string",
+                      "format": "date",
+                      "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))$"
+                    }
+                  },
+                  "required": [
+                    "list",
+                    "kind",
+                    "entry_date"
+                  ],
+                  "additionalProperties": false
+                },
+                {
+                  "type": "object",
+                  "properties": {
+                    "list": {
+                      "type": "string",
+                      "const": "travel_visa_history"
+                    },
+                    "kind": {
+                      "type": "string",
+                      "const": "visa"
+                    },
+                    "visa_type": {
+                      "type": "string",
+                      "minLength": 1,
+                      "maxLength": 120,
+                      "pattern": "^[^\\u0000-\\u001F\\u007F]*$"
+                    },
+                    "issue_date": {
+                      "type": "string",
+                      "format": "date",
+                      "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))$"
+                    },
+                    "expiry_date": {
+                      "type": "string",
+                      "format": "date",
+                      "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))$"
+                    },
+                    "issue_location": {
+                      "type": "string",
+                      "minLength": 1,
+                      "maxLength": 120,
+                      "pattern": "^[^\\u0000-\\u001F\\u007F]*$"
+                    }
+                  },
+                  "required": [
+                    "list",
+                    "kind",
+                    "visa_type",
+                    "issue_date"
+                  ],
+                  "additionalProperties": false
+                },
+                {
+                  "type": "object",
+                  "properties": {
+                    "list": {
+                      "type": "string",
+                      "const": "employment_history"
+                    },
+                    "employer_name": {
+                      "type": "string",
+                      "minLength": 1,
+                      "maxLength": 200,
+                      "pattern": "^[^\\u0000-\\u001F\\u007F]*$"
+                    },
+                    "employer_type": {
+                      "type": "string",
+                      "minLength": 1,
+                      "maxLength": 120,
+                      "pattern": "^[^\\u0000-\\u001F\\u007F]*$"
+                    },
+                    "job_title": {
+                      "type": "string",
+                      "minLength": 1,
+                      "maxLength": 120,
+                      "pattern": "^[^\\u0000-\\u001F\\u007F]*$"
+                    },
+                    "start_date": {
+                      "type": "string",
+                      "format": "date",
+                      "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))$"
+                    },
+                    "end_date": {
+                      "type": "string",
+                      "format": "date",
+                      "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))$"
+                    },
+                    "is_current": {
+                      "type": "boolean"
+                    },
+                    "hours_per_week": {
+                      "type": "integer",
+                      "exclusiveMinimum": 0,
+                      "maximum": 168
+                    },
+                    "job_duties": {
+                      "type": "string",
+                      "minLength": 1,
+                      "maxLength": 600,
+                      "pattern": "^[^\\u0000-\\u001F\\u007F]*$"
+                    },
+                    "work_location": {
+                      "type": "string",
+                      "minLength": 1,
+                      "maxLength": 200,
+                      "pattern": "^[^\\u0000-\\u001F\\u007F]*$"
+                    }
+                  },
+                  "required": [
+                    "list",
+                    "employer_name"
+                  ],
+                  "additionalProperties": false
+                },
+                {
+                  "type": "object",
+                  "properties": {
+                    "list": {
+                      "type": "string",
+                      "const": "education_history"
+                    },
+                    "institution_name": {
+                      "type": "string",
+                      "minLength": 1,
+                      "maxLength": 200,
+                      "pattern": "^[^\\u0000-\\u001F\\u007F]*$"
+                    },
+                    "institution_address": {
+                      "type": "string",
+                      "minLength": 1,
+                      "maxLength": 200,
+                      "pattern": "^[^\\u0000-\\u001F\\u007F]*$"
+                    },
+                    "degree_type": {
+                      "type": "string",
+                      "minLength": 1,
+                      "maxLength": 120,
+                      "pattern": "^[^\\u0000-\\u001F\\u007F]*$"
+                    },
+                    "degree_name": {
+                      "type": "string",
+                      "minLength": 1,
+                      "maxLength": 120,
+                      "pattern": "^[^\\u0000-\\u001F\\u007F]*$"
+                    },
+                    "field_of_study": {
+                      "type": "string",
+                      "minLength": 1,
+                      "maxLength": 120,
+                      "pattern": "^[^\\u0000-\\u001F\\u007F]*$"
+                    },
+                    "start_date": {
+                      "type": "string",
+                      "format": "date",
+                      "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))$"
+                    },
+                    "end_date": {
+                      "type": "string",
+                      "format": "date",
+                      "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))$"
+                    },
+                    "graduation_date": {
+                      "type": "string",
+                      "format": "date",
+                      "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))$"
+                    },
+                    "currently_enrolled": {
+                      "type": "boolean"
+                    },
+                    "city": {
+                      "type": "string",
+                      "minLength": 1,
+                      "maxLength": 120,
+                      "pattern": "^[^\\u0000-\\u001F\\u007F]*$"
+                    },
+                    "state_province": {
+                      "type": "string",
+                      "minLength": 1,
+                      "maxLength": 120,
+                      "pattern": "^[^\\u0000-\\u001F\\u007F]*$"
+                    },
+                    "country": {
+                      "type": "string",
+                      "minLength": 1,
+                      "maxLength": 120,
+                      "pattern": "^[^\\u0000-\\u001F\\u007F]*$"
+                    }
+                  },
+                  "required": [
+                    "list",
+                    "institution_name"
+                  ],
+                  "additionalProperties": false
+                },
+                {
+                  "type": "object",
+                  "properties": {
+                    "list": {
+                      "type": "string",
+                      "const": "dependents"
+                    },
+                    "relationship": {
+                      "type": "string",
+                      "minLength": 1,
+                      "maxLength": 120,
+                      "pattern": "^[^\\u0000-\\u001F\\u007F]*$"
+                    },
+                    "full_name": {
+                      "type": "string",
+                      "minLength": 1,
+                      "maxLength": 200,
+                      "pattern": "^[^\\u0000-\\u001F\\u007F]*$"
+                    },
+                    "date_of_birth": {
+                      "type": "string",
+                      "format": "date",
+                      "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))$"
+                    },
+                    "country_of_birth": {
+                      "type": "string",
+                      "minLength": 1,
+                      "maxLength": 120,
+                      "pattern": "^[^\\u0000-\\u001F\\u007F]*$"
+                    },
+                    "nationality": {
+                      "type": "string",
+                      "minLength": 1,
+                      "maxLength": 120,
+                      "pattern": "^[^\\u0000-\\u001F\\u007F]*$"
+                    },
+                    "immigration_status": {
+                      "type": "string",
+                      "minLength": 1,
+                      "maxLength": 120,
+                      "pattern": "^[^\\u0000-\\u001F\\u007F]*$"
+                    },
+                    "current_address": {
+                      "type": "string",
+                      "minLength": 1,
+                      "maxLength": 200,
+                      "pattern": "^[^\\u0000-\\u001F\\u007F]*$"
+                    },
+                    "filing_derivative": {
+                      "type": "boolean"
+                    }
+                  },
+                  "required": [
+                    "list",
+                    "relationship"
+                  ],
+                  "additionalProperties": false
+                }
+              ]
+            },
+            "idempotencyKey": {
+              "type": "string",
+              "minLength": 16,
+              "maxLength": 128,
+              "pattern": "^[A-Za-z0-9._-]+$"
+            },
+            "conversationId": {
+              "description": "Observability only: reuse one stable id for every call in the same conversation (used to group them). Never affects the result.",
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 128
+            },
+            "requestSummary": {
+              "description": "One plain-language sentence, in your own words, saying what the user is asking for on this call (no names or sensitive details). LegalOS uses it to interpret and correctly handle the request in context — always include it.",
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 500
+            }
+          },
+          "required": [
+            "petitionId",
+            "contractVersion",
+            "expectedIntakeRevision",
+            "entry",
+            "idempotencyKey"
+          ],
+          "additionalProperties": false
+        },
+        "annotations": {
+          "title": "Add Beneficiary Intake Entry",
+          "readOnlyHint": false,
+          "destructiveHint": false,
+          "idempotentHint": true,
+          "openWorldHint": false
+        }
+      },
+      {
+        "name": "update_beneficiary_intake_entry",
+        "title": "Update Beneficiary Intake Entry",
+        "description": "Update fields of ONE existing beneficiary intake entry the user identified (employment, education, dependents). Confirm the target case and restate the entry first — never guess. Echo previousFields + a fresh expectedIntakeRevision; re-read on revision_mismatch. Sensitive IDs stay on the form page.",
+        "inputSchema": {
+          "$schema": "http://json-schema.org/draft-07/schema#",
+          "type": "object",
+          "properties": {
+            "petitionId": {
+              "type": "string",
+              "format": "uuid",
+              "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+            },
+            "entryId": {
+              "type": "string",
+              "format": "uuid",
+              "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+            },
+            "contractVersion": {
+              "type": "string",
+              "const": "beneficiary.v1"
+            },
+            "expectedIntakeRevision": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 64,
+              "pattern": "^[A-Za-z0-9._-]+$"
+            },
+            "list": {
+              "type": "string",
+              "enum": [
+                "employment_history",
+                "education_history",
+                "dependents"
+              ]
+            },
+            "fields": {
+              "type": "object",
+              "propertyNames": {
+                "type": "string"
+              },
+              "additionalProperties": {}
+            },
+            "previousFields": {
+              "type": "object",
+              "propertyNames": {
+                "type": "string"
+              },
+              "additionalProperties": {}
+            },
+            "idempotencyKey": {
+              "type": "string",
+              "minLength": 16,
+              "maxLength": 128,
+              "pattern": "^[A-Za-z0-9._-]+$"
+            },
+            "conversationId": {
+              "description": "Observability only: reuse one stable id for every call in the same conversation (used to group them). Never affects the result.",
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 128
+            },
+            "requestSummary": {
+              "description": "One plain-language sentence, in your own words, saying what the user is asking for on this call (no names or sensitive details). LegalOS uses it to interpret and correctly handle the request in context — always include it.",
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 500
+            }
+          },
+          "required": [
+            "petitionId",
+            "entryId",
+            "contractVersion",
+            "expectedIntakeRevision",
+            "list",
+            "fields",
+            "previousFields",
+            "idempotencyKey"
+          ],
+          "additionalProperties": false
+        },
+        "annotations": {
+          "title": "Update Beneficiary Intake Entry",
+          "readOnlyHint": false,
+          "destructiveHint": true,
+          "idempotentHint": true,
+          "openWorldHint": false
+        }
+      },
+      {
+        "name": "remove_beneficiary_intake_entry",
+        "title": "Remove Beneficiary Intake Entry",
+        "description": "Remove ONE existing beneficiary intake entry (employment, education, dependents) the user explicitly asked to delete — restate it and confirm the target case first. Soft-deletes; recoverable by staff. Needs a fresh expectedIntakeRevision. Travel/visa entries stay on the form page.",
+        "inputSchema": {
+          "$schema": "http://json-schema.org/draft-07/schema#",
+          "type": "object",
+          "properties": {
+            "petitionId": {
+              "type": "string",
+              "format": "uuid",
+              "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+            },
+            "entryId": {
+              "type": "string",
+              "format": "uuid",
+              "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+            },
+            "contractVersion": {
+              "type": "string",
+              "const": "beneficiary.v1"
+            },
+            "expectedIntakeRevision": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 64,
+              "pattern": "^[A-Za-z0-9._-]+$"
+            },
+            "list": {
+              "type": "string",
+              "enum": [
+                "employment_history",
+                "education_history",
+                "dependents"
+              ]
+            },
+            "idempotencyKey": {
+              "type": "string",
+              "minLength": 16,
+              "maxLength": 128,
+              "pattern": "^[A-Za-z0-9._-]+$"
+            },
+            "conversationId": {
+              "description": "Observability only: reuse one stable id for every call in the same conversation (used to group them). Never affects the result.",
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 128
+            },
+            "requestSummary": {
+              "description": "One plain-language sentence, in your own words, saying what the user is asking for on this call (no names or sensitive details). LegalOS uses it to interpret and correctly handle the request in context — always include it.",
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 500
+            }
+          },
+          "required": [
+            "petitionId",
+            "entryId",
+            "contractVersion",
+            "expectedIntakeRevision",
+            "list",
+            "idempotencyKey"
+          ],
+          "additionalProperties": false
+        },
+        "annotations": {
+          "title": "Remove Beneficiary Intake Entry",
+          "readOnlyHint": false,
+          "destructiveHint": true,
+          "idempotentHint": true,
+          "openWorldHint": false
+        }
+      },
+      {
+        "name": "list_recommenders",
+        "title": "List Recommenders",
+        "description": "List a case's recommendation-letter recommenders — each one's name, connection type, lifecycle status, and draft-reviewed/signed flags. Call get_recommender for a card's full fields.",
+        "inputSchema": {
+          "$schema": "http://json-schema.org/draft-07/schema#",
+          "type": "object",
+          "properties": {
+            "petitionId": {
+              "type": "string",
+              "format": "uuid",
+              "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+            },
+            "conversationId": {
+              "description": "Observability only: reuse one stable id for every call in the same conversation (used to group them). Never affects the result.",
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 128
+            },
+            "requestSummary": {
+              "description": "One plain-language sentence, in your own words, saying what the user is asking for on this call (no names or sensitive details). LegalOS uses it to interpret and correctly handle the request in context — always include it.",
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 500
+            }
+          },
+          "required": [
+            "petitionId"
+          ],
+          "additionalProperties": false
+        },
+        "annotations": {
+          "title": "List Recommenders",
+          "readOnlyHint": true,
+          "destructiveHint": false,
+          "idempotentHint": true,
+          "openWorldHint": false
+        }
+      },
+      {
+        "name": "get_recommender",
+        "title": "Get Recommender",
+        "description": "Get one recommender's full card — name, LinkedIn URL and background, connection, relationship and project details, note, the draft editor link, status, and a signed-letter upload link. Null fields show what's missing.",
+        "inputSchema": {
+          "$schema": "http://json-schema.org/draft-07/schema#",
+          "type": "object",
+          "properties": {
+            "petitionId": {
+              "type": "string",
+              "format": "uuid",
+              "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+            },
+            "recommenderId": {
+              "type": "string",
+              "format": "uuid",
+              "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+            },
+            "conversationId": {
+              "description": "Observability only: reuse one stable id for every call in the same conversation (used to group them). Never affects the result.",
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 128
+            },
+            "requestSummary": {
+              "description": "One plain-language sentence, in your own words, saying what the user is asking for on this call (no names or sensitive details). LegalOS uses it to interpret and correctly handle the request in context — always include it.",
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 500
+            }
+          },
+          "required": [
+            "petitionId",
+            "recommenderId"
+          ],
+          "additionalProperties": false
+        },
+        "annotations": {
+          "title": "Get Recommender",
+          "readOnlyHint": true,
+          "destructiveHint": false,
+          "idempotentHint": true,
+          "openWorldHint": false
+        }
+      },
+      {
+        "name": "update_recommender",
+        "title": "Update Recommender",
+        "description": "Edit a recommender's card fields or mark its draft reviewed (draftReviewed). Requires expectedRecommenderVersion from get_recommender; a concurrent change is refused. Signed-letter upload stays first-party.",
+        "inputSchema": {
+          "$schema": "http://json-schema.org/draft-07/schema#",
+          "type": "object",
+          "properties": {
+            "petitionId": {
+              "type": "string",
+              "format": "uuid",
+              "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+            },
+            "recommenderId": {
+              "type": "string",
+              "format": "uuid",
+              "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+            },
+            "contractVersion": {
+              "type": "string",
+              "const": "recommenders.v1"
+            },
+            "expectedRecommenderVersion": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 64,
+              "pattern": "^[A-Za-z0-9._-]+$"
+            },
+            "fields": {
+              "type": "object",
+              "properties": {
+                "name": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 200,
+                  "pattern": "^[^\\u0000-\\u001F\\u007F]*$"
+                },
+                "linkedinUrl": {
+                  "anyOf": [
+                    {
+                      "type": "string",
+                      "minLength": 1,
+                      "maxLength": 2048,
+                      "pattern": "^[^\\u0000-\\u001F\\u007F]*$"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "linkedinBackground": {
+                  "anyOf": [
+                    {
+                      "type": "string",
+                      "minLength": 1,
+                      "maxLength": 2000,
+                      "pattern": "^[^\\u0000-\\u001F\\u007F]*$"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "connectionType": {
+                  "anyOf": [
+                    {
+                      "type": "string",
+                      "enum": [
+                        "objective",
+                        "subjective"
+                      ]
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "connection": {
+                  "anyOf": [
+                    {
+                      "type": "string",
+                      "minLength": 1,
+                      "maxLength": 200,
+                      "pattern": "^[^\\u0000-\\u001F\\u007F]*$"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "relationshipBackground": {
+                  "anyOf": [
+                    {
+                      "type": "string",
+                      "minLength": 1,
+                      "maxLength": 2000,
+                      "pattern": "^[^\\u0000-\\u001F\\u007F]*$"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "projectDetails": {
+                  "anyOf": [
+                    {
+                      "type": "string",
+                      "minLength": 1,
+                      "maxLength": 2000,
+                      "pattern": "^[^\\u0000-\\u001F\\u007F]*$"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "note": {
+                  "anyOf": [
+                    {
+                      "type": "string",
+                      "minLength": 1,
+                      "maxLength": 2000,
+                      "pattern": "^[^\\u0000-\\u001F\\u007F]*$"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "confirmed": {
+                  "type": "boolean"
+                },
+                "draftReviewed": {
+                  "type": "boolean"
+                }
+              },
+              "additionalProperties": false
+            },
+            "idempotencyKey": {
+              "type": "string",
+              "minLength": 16,
+              "maxLength": 128,
+              "pattern": "^[A-Za-z0-9._-]+$"
+            },
+            "conversationId": {
+              "description": "Observability only: reuse one stable id for every call in the same conversation (used to group them). Never affects the result.",
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 128
+            },
+            "requestSummary": {
+              "description": "One plain-language sentence, in your own words, saying what the user is asking for on this call (no names or sensitive details). LegalOS uses it to interpret and correctly handle the request in context — always include it.",
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 500
+            }
+          },
+          "required": [
+            "petitionId",
+            "recommenderId",
+            "contractVersion",
+            "expectedRecommenderVersion",
+            "fields",
+            "idempotencyKey"
+          ],
+          "additionalProperties": false
+        },
+        "annotations": {
+          "title": "Update Recommender",
+          "readOnlyHint": false,
+          "destructiveHint": true,
+          "idempotentHint": true,
+          "openWorldHint": false
+        }
+      },
+      {
+        "name": "list_evidence_criteria",
+        "title": "List Evidence Criteria",
+        "description": "List a case's extraordinary-ability evidence criteria: each one's type, status, item counts, and the cached combined-strength verdict. A lean summary — call get_evidence_criterion for one section's items and full gap analysis. May be empty before the section is set up.",
+        "inputSchema": {
+          "$schema": "http://json-schema.org/draft-07/schema#",
+          "type": "object",
+          "properties": {
+            "petitionId": {
+              "type": "string",
+              "format": "uuid",
+              "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+            },
+            "conversationId": {
+              "description": "Observability only: reuse one stable id for every call in the same conversation (used to group them). Never affects the result.",
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 128
+            },
+            "requestSummary": {
+              "description": "One plain-language sentence, in your own words, saying what the user is asking for on this call (no names or sensitive details). LegalOS uses it to interpret and correctly handle the request in context — always include it.",
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 500
+            }
+          },
+          "required": [
+            "petitionId"
+          ],
+          "additionalProperties": false
+        },
+        "annotations": {
+          "title": "List Evidence Criteria",
+          "readOnlyHint": true,
+          "destructiveHint": false,
+          "idempotentHint": true,
+          "openWorldHint": false
+        }
+      },
+      {
+        "name": "get_evidence_criterion",
+        "title": "Get Evidence Criterion",
+        "description": "Get one evidence criterion in full: its items (title, link, processing status, per-item AI evaluation), the combined strength analysis with coverage highlights and remaining gaps, and fulfilled documentation. Uploads happen on the linked first-party page.",
+        "inputSchema": {
+          "$schema": "http://json-schema.org/draft-07/schema#",
+          "type": "object",
+          "properties": {
+            "petitionId": {
+              "type": "string",
+              "format": "uuid",
+              "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+            },
+            "criterionType": {
+              "type": "string",
+              "enum": [
+                "press",
+                "awards",
+                "memberships",
+                "judging",
+                "original_contributions",
+                "scholarly_publications",
+                "critical_role",
+                "remuneration",
+                "exhibitions",
+                "commercial_success",
+                "qualifying_relationship",
+                "managerial_capacity",
+                "foreign_employment"
+              ]
+            },
+            "conversationId": {
+              "description": "Observability only: reuse one stable id for every call in the same conversation (used to group them). Never affects the result.",
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 128
+            },
+            "requestSummary": {
+              "description": "One plain-language sentence, in your own words, saying what the user is asking for on this call (no names or sensitive details). LegalOS uses it to interpret and correctly handle the request in context — always include it.",
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 500
+            }
+          },
+          "required": [
+            "petitionId",
+            "criterionType"
+          ],
+          "additionalProperties": false
+        },
+        "annotations": {
+          "title": "Get Evidence Criterion",
+          "readOnlyHint": true,
+          "destructiveHint": false,
+          "idempotentHint": true,
+          "openWorldHint": false
+        }
+      },
+      {
+        "name": "add_evidence_contribution",
+        "title": "Add Evidence Contribution",
+        "description": "Add one URL as evidence for a criterion (articleUrl + optional whyItMatters). Additive and async: it returns 'processing' — re-read get_evidence_criterion for the evaluated strength. Document uploads stay on the first-party page.",
+        "inputSchema": {
+          "$schema": "http://json-schema.org/draft-07/schema#",
+          "type": "object",
+          "properties": {
+            "petitionId": {
+              "type": "string",
+              "format": "uuid",
+              "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+            },
+            "criterionType": {
+              "type": "string",
+              "enum": [
+                "press",
+                "awards",
+                "memberships",
+                "judging",
+                "original_contributions",
+                "scholarly_publications",
+                "critical_role",
+                "remuneration",
+                "exhibitions",
+                "commercial_success",
+                "qualifying_relationship",
+                "managerial_capacity",
+                "foreign_employment"
+              ]
+            },
+            "contractVersion": {
+              "type": "string",
+              "const": "evidence.v1"
+            },
+            "articleUrl": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 2048,
+              "pattern": "^[^\\u0000-\\u001F\\u007F]*$"
+            },
+            "whyItMatters": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 2000,
+              "pattern": "^[^\\u0000-\\u001F\\u007F]*$"
+            },
+            "idempotencyKey": {
+              "type": "string",
+              "minLength": 16,
+              "maxLength": 128,
+              "pattern": "^[A-Za-z0-9._-]+$"
+            },
+            "conversationId": {
+              "description": "Observability only: reuse one stable id for every call in the same conversation (used to group them). Never affects the result.",
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 128
+            },
+            "requestSummary": {
+              "description": "One plain-language sentence, in your own words, saying what the user is asking for on this call (no names or sensitive details). LegalOS uses it to interpret and correctly handle the request in context — always include it.",
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 500
+            }
+          },
+          "required": [
+            "petitionId",
+            "criterionType",
+            "contractVersion",
+            "articleUrl",
+            "idempotencyKey"
+          ],
+          "additionalProperties": false
+        },
+        "annotations": {
+          "title": "Add Evidence Contribution",
+          "readOnlyHint": false,
+          "destructiveHint": false,
+          "idempotentHint": true,
+          "openWorldHint": false
+        }
+      },
+      {
+        "name": "send_feedback",
+        "title": "Send feedback",
+        "description": "Records feedback about this MCP server, including unexpected tool failures, unhelpful responses, or missing capabilities observed by the agent or reported by the user.",
+        "annotations": {
+          "readOnlyHint": false,
+          "destructiveHint": false,
+          "openWorldHint": true
+        },
+        "inputSchema": {
+          "type": "object",
+          "properties": {
+            "content": {
+              "type": "string",
+              "description": "The feedback content, stripped of any PII."
+            },
+            "source": {
+              "type": "string",
+              "enum": [
+                "user",
+                "model"
+              ],
+              "description": "Who initiated the feedback: \"user\" or \"model\"."
+            }
+          },
+          "required": [
+            "content",
+            "source"
+          ]
+        }
+      }
+    ]
+  }
+}
