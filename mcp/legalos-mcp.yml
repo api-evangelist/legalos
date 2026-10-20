@@ -48,3 +48,78 @@ tool_quality:
   scored: false
   note: Facts from the saved tools/list capture (mcp_tool_quality.py); recorded, not scored. Checks learned
     from Glimind's agent-readiness audit.
+tools:
+- name: list_cases
+  description: List the caller's accessible LegalOS cases with beneficiaryName, canonical status, and
+    a first-party case link. Cursor-paginated. When the user names a case, person, or visa type without
+    an ID, call this proactively and match on beneficiaryName — never ask the user for case IDs or UUIDs.
+- name: get_case_status
+  description: 'Get one case''s canonical LegalOS status: waiting party, progress, steps, and server-generated
+    next actions. Never infer beyond it. When listing steps or documents, mark what is done with ✅ and
+    what is still needed with ☑️.'
+- name: list_missing_requirements
+  description: List a case's outstanding document requirements with status and a first-party upload link.
+    Cursor-paginated. Show items as a ☑️ checklist (✅ when collected). Match the user's document to one,
+    then send them to its requirementUrl — it opens the exact upload row. Never ask for the file in chat.
+- name: get_faq
+  description: Vetted LegalOS help content for common client questions. Ground answers ONLY on this content
+    and the user's case data — never give legal advice beyond them. If they do not answer the question,
+    direct the user to the LegalOS support channel (supportChannelUrl).
+- name: list_document_suggestions
+  description: 'Optional, case-strengthening document suggestions for one case: attorney-recommended evidence
+    plus optional tracker items. Never blockers — mention positively after the required upload path is
+    settled, e.g. ''this would also strengthen your case''. May be empty; never invent suggestions beyond
+    it.'
+- name: get_beneficiary_intake
+  description: 'Overview of one case''s beneficiary intake: per-step completion counts, list totals, the
+    current intakeRevision, and first-party form links. Show the seven steps as a ☑️ checklist (✅ when
+    complete). Read this before any step; submitting stays on the first-party form page.'
+- name: get_beneficiary_intake_step
+  description: 'Read one beneficiary intake step: scalar steps return each field''s current value and
+    policy; list steps a bounded entry window with the total. All fields, including identifiers (SSN,
+    passport, I-94), return their value and are editable. A truncated list''s remainder is on the form
+    page.'
+- name: set_beneficiary_intake_answers
+  description: 'Set beneficiary intake answers the user stated — never inferred. Confirm the target case
+    first: verify the beneficiary name; if several cases match, ask — never guess. Echo previousValue
+    + expectedIntakeRevision from a fresh read; re-read on revision_mismatch. Sensitive IDs stay on the
+    form page.'
+- name: add_beneficiary_intake_entry
+  description: 'Append ONE user-stated entry to a beneficiary intake list (employment, education, travel/visa,
+    dependents). Confirm the target case first: verify the beneficiary name — never guess. Never edits
+    existing entries (form page only). Needs a fresh expectedIntakeRevision; travel/visa returns entryId
+    null.'
+- name: update_beneficiary_intake_entry
+  description: Update fields of ONE existing beneficiary intake entry the user identified (employment,
+    education, dependents). Confirm the target case and restate the entry first — never guess. Echo previousFields
+    + a fresh expectedIntakeRevision; re-read on revision_mismatch. Sensitive IDs stay on the form page.
+- name: remove_beneficiary_intake_entry
+  description: Remove ONE existing beneficiary intake entry (employment, education, dependents) the user
+    explicitly asked to delete — restate it and confirm the target case first. Soft-deletes; recoverable
+    by staff. Needs a fresh expectedIntakeRevision. Travel/visa entries stay on the form page.
+- name: list_recommenders
+  description: List a case's recommendation-letter recommenders — each one's name, connection type, lifecycle
+    status, and draft-reviewed/signed flags. Call get_recommender for a card's full fields.
+- name: get_recommender
+  description: Get one recommender's full card — name, LinkedIn URL and background, connection, relationship
+    and project details, note, the draft editor link, status, and a signed-letter upload link. Null fields
+    show what's missing.
+- name: update_recommender
+  description: Edit a recommender's card fields or mark its draft reviewed (draftReviewed). Requires expectedRecommenderVersion
+    from get_recommender; a concurrent change is refused. Signed-letter upload stays first-party.
+- name: list_evidence_criteria
+  description: 'List a case''s extraordinary-ability evidence criteria: each one''s type, status, item
+    counts, and the cached combined-strength verdict. A lean summary — call get_evidence_criterion for
+    one section''s items and full gap analysis. May be empty before the section is set up.'
+- name: get_evidence_criterion
+  description: 'Get one evidence criterion in full: its items (title, link, processing status, per-item
+    AI evaluation), the combined strength analysis with coverage highlights and remaining gaps, and fulfilled
+    documentation. Uploads happen on the linked first-party page.'
+- name: add_evidence_contribution
+  description: 'Add one URL as evidence for a criterion (articleUrl + optional whyItMatters). Additive
+    and async: it returns ''processing'' — re-read get_evidence_criterion for the evaluated strength.
+    Document uploads stay on the first-party page.'
+- name: send_feedback
+  description: Records feedback about this MCP server, including unexpected tool failures, unhelpful responses,
+    or missing capabilities observed by the agent or reported by the user.
+tools_count: 18
